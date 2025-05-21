@@ -6,33 +6,33 @@ import {
   JoinColumn,
 } from 'typeorm';
 import 'reflect-metadata';
-import { TradingPoints } from './trading-points.js';
+import { TradingPoint } from './trading-point.js';
 import { DepartmentStoreSection } from './department-store-section.js';
 
-@Entity({ name: 'TradingPointHalls' })
+@Entity({ name: 'trading_point_halls' })
 export class TradingPointHall {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id!: number;
 
-  @ManyToOne(() => TradingPoints, { nullable: false })
-  @JoinColumn({ name: 'tradingPointId' })
-  tradingPoint!: TradingPoints;
+  @ManyToOne(() => TradingPoint, { nullable: false })
+  @JoinColumn({ name: 'trading_point_id' })
+  tradingPoint!: TradingPoint;
 
   @ManyToOne(() => DepartmentStoreSection, { nullable: true })
-  @JoinColumn({ name: 'sectionId' })
+  @JoinColumn({ name: 'section_id' })
   section?: DepartmentStoreSection;
 
   @Column({ type: 'varchar', length: 100 })
   name!: string;
 
-  @Column({ type: 'int', name: 'floorNumber', default: 1 })
+  @Column({ type: 'int', name: 'floor_number', default: 1 })
   floorNumber!: number;
 
-  @Column({ type: 'numeric', precision: 10, scale: 2, name: 'sizeSqm', nullable: true })
+  @Column({ type: 'numeric', precision: 10, scale: 2, name: 'size_sqm', nullable: true })
   sizeSqm!: number;
 
   constructor(data?: {
-    tradingPoint: TradingPoints;
+    tradingPoint: TradingPoint;
     section: DepartmentStoreSection;
     name: string;
     floorNumber: number;

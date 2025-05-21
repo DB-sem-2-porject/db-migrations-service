@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { User } from './entity/users.ts';
+import { User } from './entity/user.ts';
 // ... импорт остальных сущностей
 
 export default new DataSource({

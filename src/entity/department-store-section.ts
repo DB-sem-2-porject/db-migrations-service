@@ -6,39 +6,51 @@ import {
   JoinColumn,
 } from 'typeorm';
 import 'reflect-metadata';
-import { TradingPoints } from './trading-points.js';
+import { TradingPoint } from './trading-point.js';
 import { Employee } from './employee.js';
 
-@Entity({ name: 'DepartmentStoreSections' })
+@Entity({ name: 'department_store_sections' })
 export class DepartmentStoreSection {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id!: number;
 
-  @ManyToOne(() => TradingPoints, { nullable: false })
-  @JoinColumn({ name: 'tradingPointId' })
-  tradingPoint!: TradingPoints;
+  @ManyToOne(() => TradingPoint, { nullable: false })
+  @JoinColumn({
+    name: 'trading_point_id',
+    referencedColumnName: 'id'
+  })
+  tradingPoint!: TradingPoint;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({
+    type: 'varchar',
+    length: 100
+  })
   name!: string;
 
-  @Column({ type: 'int', name: 'floorNumber' })
+  @Column({
+    type: 'int',
+    name: 'floor_number'
+  })
   floorNumber!: number;
 
   @ManyToOne(() => Employee, { nullable: true })
-  @JoinColumn({ name: 'managerId', referencedColumnName: 'id' })
-  manager?: Employee;
+  @JoinColumn({
+    name: 'manager_id',
+    referencedColumnName: 'id'
+  })
+  managerId?: Employee;
 
    constructor(data?: {
-    tradingPoint: TradingPoints;
+    tradingPoint: TradingPoint;
     name: string;
     floorNumber: number;
-    manager?: Employee;
+     managerId?: Employee;
   }) {
     if (data) {
       this.tradingPoint = data.tradingPoint;
       this.name = data.name;
       this.floorNumber = data.floorNumber;
-      this.manager = data.manager;
+      this.managerId = data.managerId;
     }
   }
 }

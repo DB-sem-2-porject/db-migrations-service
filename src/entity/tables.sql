@@ -91,22 +91,12 @@ create table trading_point_halls (
 
 
 -- связь сотрудников с залами и секциями
-alter table employees add column hall_id integer references trading_point_halls(id);
-alter table employees add column section_id integer references department_store_sections(id);
-
-create table users (
-    id                      serial primary key,
-    email                   varchar(100) not null unique,
-    password                varchar(255) not null,
-    reset_token             text,
-    registration_date       timestamp default now(),
-    last_login              timestamp
-);
+-- alter table employees add column hall_id integer references trading_point_halls(id);
+-- alter table employees add column section_id integer references department_store_sections(id);
 
 create table providers (
     id                      serial primary key,
     name                    varchar(100) not null,
-    contact_person          varchar(100),
     phone                   varchar(20),
     email                   varchar(100),
     address                 text,
@@ -120,8 +110,7 @@ create table product_directory (
     name                    varchar(100) not null,
     description             text,
     category                varchar(50),
-    unit                    varchar(20) not null default 'шт', -- единица измерения
-    barcode                 varchar(50),
+    measurement             varchar(20) not null default 'шт', -- единица измерения
     created_at              timestamp default now()
 );
 
@@ -152,7 +141,7 @@ create table trade_request_items (
     id                      serial primary key,
     request_id              integer not null references trade_requests(id),
     product_id              integer not null references product_directory(id),
-    amount                  integer not null,
+    quantity                integer not null,
     constraint positive_quantity check (amount > 0)
 );
 
@@ -160,10 +149,8 @@ create table trade_request_items (
 create table orders (
     id                      serial primary key,
     provider_id             integer not null references providers(id),
-    employee_id             integer not null references employees(id), -- менеджер, создавший заказ
     order_date              timestamp not null default now(),
     status                  order_status not null default 'новый',
-    delivery_address        text not null,
     total_cost              numeric(14, 2),
     notes                   text
 );

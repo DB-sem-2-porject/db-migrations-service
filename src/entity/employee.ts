@@ -6,46 +6,65 @@ import {
     JoinColumn,
 } from 'typeorm';
 import 'reflect-metadata';
-import { EmployeeRole } from './enum/employee-role.js';
-import { TradingPoints } from './trading-points.js';
+import { EMPLOYEE_ROLE_ENUM_NAME, EmployeeRole } from './enum/employee-role.js';
+import { TradingPoint } from './trading-point.js';
 
-@Entity({ name: 'Employees' })
+@Entity({ name: 'employees' })
 export class Employee {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 100 })
+    @Column({name: 'full_name', type: 'varchar', length: 100 })
     fullName!: string;
 
     @Column({
         type: 'enum',
         enum: EmployeeRole,
+        enumName: EMPLOYEE_ROLE_ENUM_NAME,
     })
     role!: EmployeeRole;
 
-    @ManyToOne(() => TradingPoints)
-    @JoinColumn({ name: 'tradingPointId' })
-    tradingPoint!: TradingPoints;
+    @ManyToOne(() => TradingPoint)
+    @JoinColumn({ name: 'trading_point_id' })
+    tradingPoint!: TradingPoint;
 
-    @Column({ type: 'date', default: () => 'CURRENT_DATE' })
+    @Column({
+        name: 'hire_date',
+        type: 'date',
+        default: () => 'CURRENT_DATE' })
     hireDate!: Date;
 
-    @Column({ type: 'numeric', precision: 10, scale: 2 })
+    @Column({
+        name: 'base_salary',
+        type: 'numeric',
+        precision: 10,
+        scale: 2 })
     baseSalary!: number;
 
-    @Column({ type: 'varchar', length: 20, nullable: true })
+    @Column({
+        name: 'phone',
+        type: 'varchar',
+        length: 20,
+        nullable: true })
     phone?: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
+    @Column({
+        name: 'email',
+        type: 'varchar',
+        length: 100,
+        nullable: true })
     email?: string;
 
-    @Column({ type: 'boolean', default: true })
+    @Column({
+        name: 'active',
+        type: 'boolean',
+        default: true })
     active!: boolean;
 
     constructor(data?: {
         fullName: string;
         role: EmployeeRole;
-        tradingPoint: TradingPoints;
+        tradingPoint: TradingPoint;
         hireDate?: Date;
         baseSalary: number;
         phone?: string;

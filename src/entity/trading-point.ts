@@ -6,8 +6,8 @@ import {
 import 'reflect-metadata';
 import { TradingPointType } from './enum/trading-point-type.js';
 
-@Entity({ name: 'TradingPoints' })
-export class TradingPoints {
+@Entity({ name: 'trading_points' })
+export class TradingPoint {
     @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
     id!: number;
 
@@ -23,32 +23,64 @@ export class TradingPoints {
     @Column({ type: 'text' })
     address!: string;
 
-    @Column({ type: 'numeric', precision: 10, scale: 2, nullable: true })
-    sizeSquareMeters?: number;
+    @Column({
+        name: 'size_sqm',
+        type: 'numeric',
+        precision: 10,
+        scale: 2,
+        nullable: true
+    })
+    sizeSqm?: number;
 
-    @Column({ type: 'numeric', precision: 12, scale: 2, nullable: true })
+    @Column({
+        name: 'rent_cost',
+        type: 'numeric',
+        precision: 12,
+        scale: 2,
+        nullable: true
+    })
     rentCost?: number;
 
-    @Column({ type: 'numeric', precision: 12, scale: 2, nullable: true })
+    @Column({
+        name: 'utility_cost',
+        type: 'numeric',
+        precision: 12,
+        scale: 2,
+        nullable: true })
     utilityCost?: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({
+        name: 'counter_count',
+        type: 'int',
+        nullable: true
+    })
     counterCount?: number;
 
-    @Column({ type: 'int', default: 1 })
+    @Column({
+        name: 'floors_count',
+        type: 'int',
+        default: 1
+    })
     floorsCount!: number;
 
-    @Column({ type: 'date', default: () => 'now()' })
+    @Column({
+        name: 'opening_date',
+        type: 'date',
+        default: () => 'now()'
+    })
     openingDate!: Date;
 
-    @Column({ type: 'boolean', default: true })
+    @Column({
+        type: 'boolean',
+        default: true
+    })
     active!: boolean;
 
     constructor(data?: {
         name: string;
         type: TradingPointType;
         address: string;
-        sizeSquareMeters?: number;
+        sizeSqm?: number;
         rentCost: number;
         utilityCost: number;
         counterCount: number;
@@ -60,7 +92,7 @@ export class TradingPoints {
             this.name = data.name;
             this.type = data.type;
             this.address = data.address;
-            this.sizeSquareMeters = data.sizeSquareMeters;
+            this.sizeSqm = data.sizeSqm;
             this.rentCost = data.rentCost;
             this.utilityCost = data.utilityCost;
             this.counterCount = data.counterCount;

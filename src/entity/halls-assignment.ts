@@ -7,28 +7,28 @@ import {
 } from 'typeorm';
 import 'reflect-metadata';
 import { Employee } from './employee.ts';
-import { TradingPointHall } from './trading-point-halls.js';
+import { TradingPointHall } from './trading-point-hall.js';
 
-@Entity({ name: 'HallsAssignment' })
+@Entity({ name: 'halls_assignment' })
 export class HallsAssignment {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @ManyToOne(() => Employee)
   @JoinColumn({
-    name: 'employeeId',
+    name: 'employee_id',
     referencedColumnName: 'id' })
-  employeeId!: string;
+  employeeId!: Employee;
 
   @ManyToOne(() => TradingPointHall)
   @JoinColumn({
-    name: 'hallId',
+    name: 'hall_id',
     referencedColumnName: 'id' })
-  hallId!: number;
+  hallId!: TradingPointHall;
 
   constructor(data?: {
-    employeeId: string,
-    hallId: number
+    employeeId: Employee,
+    hallId: TradingPointHall
   }) {
     if (data) {
       this.employeeId = data.employeeId;

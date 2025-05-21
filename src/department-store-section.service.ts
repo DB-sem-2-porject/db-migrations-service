@@ -1,6 +1,6 @@
 import { AppDataSource } from './data-source.ts';
 import { DepartmentStoreSection } from './entity/department-store-section.ts';
-import { TradingPoints } from './entity/trading-points.js';
+import { TradingPoint } from './entity/trading-point.js';
 import { TradingPointType } from './entity/enum/trading-point-type.ts';
 
 export class DepartmentStoreSectionService {
@@ -10,7 +10,7 @@ export class DepartmentStoreSectionService {
     floorNumber: number;
     managerId?: number;
   }): Promise<DepartmentStoreSection> {
-    const tradingPointsRepository = AppDataSource.getRepository(TradingPoints);
+    const tradingPointsRepository = AppDataSource.getRepository(TradingPoint);
 
     const tradingPoint = await tradingPointsRepository.findOneByOrFail({ id: data.tradingPointId });
 
