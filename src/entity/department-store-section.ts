@@ -41,9 +41,9 @@ export class DepartmentStoreSection {
   managerId?: Employee;
 
    constructor(data?: {
-    tradingPoint: TradingPoint;
-    name: string;
-    floorNumber: number;
+     name: string;
+     tradingPoint: TradingPoint;
+     floorNumber: number;
      managerId?: Employee;
   }) {
     if (data) {

@@ -5,7 +5,7 @@ import { PRODUCT_CATEGORY_ENUM_NAME, ProductCategory } from './enum/product_cate
 import { MEASUREMENT_TYPE_ENUM_NAME, MeasurementType } from './enum/measurement_type.js';
 
 @Entity({ name: 'product_directory' })
-export class Product {
+export class ProductDirectory {
   @PrimaryGeneratedColumn()
   id!: number;
 

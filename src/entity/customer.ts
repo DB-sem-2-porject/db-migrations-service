@@ -1,9 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import 'reflect-metadata';
-import { TradingPoint } from './trading-point.js';
-import { Employee } from './employee.js';
-import { Provider } from './provider.js';
-import { ORDER_STATUS_ENUM_NAME, OrderStatus } from './enum/order_status.js';
 
 @Entity({ name: 'customers' })
 export class Customer {
@@ -16,44 +12,51 @@ export class Customer {
     type: 'varchar',
     nullable: false,
   })
-  fullName?: string;
+  fullName!: string;
+
 
   @Column({
-    name: 'status',
-    type: 'enum',
-    enum: OrderStatus,
-    enumName: ORDER_STATUS_ENUM_NAME
+    name: 'phone_number',
+    type: 'varchar',
+    nullable: true,
   })
-  status!: OrderStatus;
+  phoneNumber?: string;
 
   @Column({
-    name: 'total_cost',
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
+    name: 'registration_date',
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'now()'
   })
-  totalCost!: number;
+  registrationDate?: string;
+
+  @Column({
+    name: 'birthday',
+    type: 'date',
+    nullable: true,
+  })
+  birthday?: string;
 
   @Column({
     name: 'notes',
     type: 'text',
-    default: '',
-    nullable: true
+    nullable: true,
   })
   notes?: string;
 
   constructor(data?: {
-    provider: Provider;
-    orderDate?: Date;
-    status?: OrderStatus;
-    totalCost?: number;
+    fullName: string;
+    phoneNumber?: string;
+    registrationDate?: string;
+    birthday?: string;
     notes?: string;
   }) {
     if (data) {
-      this.provider = data.provider;
-      this.orderDate = data.orderDate ?? new Date();
-      this.status = data.status ?? OrderStatus.New;
-      this.notes = data.notes ?? '';
+      this.fullName = data.fullName;
+      this.phoneNumber = data.phoneNumber;
+      this.registrationDate = data.registrationDate;
+      this.birthday = data.birthday;
+      this.notes = data.notes;
     }
   }
 }

@@ -13,54 +13,59 @@ import { TradingPoint } from './trading-point.js';
 export class Employee {
     @PrimaryGeneratedColumn()
     id!: number;
-
-    @Column({name: 'full_name', type: 'varchar', length: 100 })
+    
+    @Column({ name: 'full_name', type: 'varchar', length: 100 })
     fullName!: string;
-
+    
     @Column({
         type: 'enum',
         enum: EmployeeRole,
         enumName: EMPLOYEE_ROLE_ENUM_NAME,
     })
     role!: EmployeeRole;
-
+    
     @ManyToOne(() => TradingPoint)
     @JoinColumn({ name: 'trading_point_id' })
     tradingPoint!: TradingPoint;
-
+    
     @Column({
         name: 'hire_date',
         type: 'date',
-        default: () => 'CURRENT_DATE' })
+        default: () => 'CURRENT_DATE'
+    })
     hireDate!: Date;
-
+    
     @Column({
         name: 'base_salary',
         type: 'numeric',
         precision: 10,
-        scale: 2 })
+        scale: 2
+    })
     baseSalary!: number;
-
+    
     @Column({
         name: 'phone',
         type: 'varchar',
         length: 20,
-        nullable: true })
+        nullable: true
+    })
     phone?: string;
-
+    
     @Column({
         name: 'email',
         type: 'varchar',
         length: 100,
-        nullable: true })
+        nullable: true
+    })
     email?: string;
-
+    
     @Column({
         name: 'active',
         type: 'boolean',
-        default: true })
+        default: true
+    })
     active!: boolean;
-
+    
     constructor(data?: {
         fullName: string;
         role: EmployeeRole;

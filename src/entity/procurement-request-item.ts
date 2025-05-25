@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import { TradingPoint } from './trading-point.ts';
 import { Employee } from './employee.ts';
 import { PROCUREMENT_REQUEST_STATUS_ENUM_NAME, ProcurementRequestStatus } from './enum/procurement_request_status.ts';
-import { ProcurementRequest } from './procurement_request.ts';
-import { Product } from './product.js';
+import { ProcurementRequest } from './procurement-request.ts';
+import { ProductDirectory } from './product-directory.js';
 
 @Entity({ name: 'procurement_request_items' })
 export class ProcurementRequestItem {
@@ -18,11 +18,11 @@ export class ProcurementRequestItem {
   })
   request!: ProcurementRequest;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => ProductDirectory)
   @JoinColumn({
     name: 'product_id',
     referencedColumnName: 'id' })
-  product!: Product;
+  product!: ProductDirectory;
 
   @Column({
     name: 'quantity',
@@ -33,7 +33,7 @@ export class ProcurementRequestItem {
 
   constructor(data?: {
     request: ProcurementRequest;
-    product: Product;
+    product: ProductDirectory;
     quantity?: number;
   }) {
     if (data) {

@@ -1,8 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import 'reflect-metadata';
-import { TradingPoint } from './trading-point.js';
-import { Employee } from './employee.js';
-import { PROCUREMENT_REQUEST_STATUS_ENUM_NAME, ProcurementRequestStatus } from './enum/procurement_request_status.js';
 import { Provider } from './provider.js';
 import { ORDER_STATUS_ENUM_NAME, OrderStatus } from './enum/order_status.js';
 

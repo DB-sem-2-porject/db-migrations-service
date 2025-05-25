@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 't
 import 'reflect-metadata';
 
 import { Provider } from './provider.js';
-import { Product } from './product.js';
+import { ProductDirectory } from './product-directory.js';
 
 @Entity({ name: 'providers_product_list' })
 export class ProviderProductList {
@@ -15,9 +15,9 @@ export class ProviderProductList {
   })
   provider!: Provider;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => ProductDirectory)
   @JoinColumn({ name: 'product_id' })
-  product!: Product;
+  product!: ProductDirectory;
 
   @Column({
     type: 'numeric',
@@ -46,7 +46,7 @@ export class ProviderProductList {
 
   constructor(data?: {
     provider: Provider;
-    product: Product;
+    product: ProductDirectory;
     price: number;
     minOrderQuantity: number;
     active?: boolean;
