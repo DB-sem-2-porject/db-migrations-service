@@ -1,12 +1,12 @@
-import {AuthService} from './service.ts';
+import {DatabaseService} from './service.ts';
 import {readFileSync} from 'node:fs';
 
-function main (): void {
+function index (): void {
 
   let serviceConfigFileContent = readFileSync('./configs/service-config.json', 'utf8');
 
   let serviceConfig = JSON.parse(serviceConfigFileContent);
-  let service: AuthService = new AuthService({
+  let service: DatabaseService = new DatabaseService({
         port: serviceConfig.port,
         host: serviceConfig.host,
       },
@@ -23,4 +23,4 @@ function main (): void {
 }
 
 
-main()
+index()

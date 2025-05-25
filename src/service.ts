@@ -3,12 +3,12 @@ import * as Hapi from "@hapi/hapi";
 import pg from 'pg';
 import { QueryResult } from "pg";
 const { Pool } = pg;
+import Boom from '@hapi/boom';
 
 import {DataSource} from "typeorm";
+import { AuthServiceInfo } from './auth-service-info.js';
 
-
-
-export interface AuthServiceOptions {
+export interface DatabaseServiceOptions {
     port: number;
     host?: string;
 }
@@ -33,18 +33,18 @@ interface LoginPayload {
     password: string;
 }
 
-export class AuthService {
+export class DatabaseService {
     private port: number;
     private host: string;
     private server: Hapi.Server;
     private secretPhrase: string = "secret";
     private pool: pg.Pool;
-
-
-    constructor(serviceOptions: AuthServiceOptions, databaseOptions: DatabaseOptions) {
+    
+    
+    constructor(serviceOptions: DatabaseServiceOptions, databaseOptions: DatabaseOptions) {
         this.port = serviceOptions.port;
         this.host = serviceOptions.host || 'localhost';
-
+        
         this.server = Hapi.server({
             port: serviceOptions.port,
             host: serviceOptions.host || 'localhost',
@@ -57,11 +57,60 @@ export class AuthService {
             user: databaseOptions.user,
             password: databaseOptions.password,
         });
+        
+        
+        // Регистрируем стратегию аутентификации
+        this.server.auth.strategy('custom', 'custom', {
+            authenticate: async (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+                const authHeader = request.headers.authorization;
+                
+                try {
+                    const response = await fetch(`${AuthServiceInfo.AUTH_SERVICE_URL}/auth`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': authHeader
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw Boom.unauthorized('Invalid token');
+                    }
+                    
+                    const data = await response.json();
+                    return h.authenticated({ credentials: data.user });
+                } catch (err) {
+                    throw Boom.unauthorized('Authentication failed');
+                }
+            }
+        });
+        
+        
+        this.server.route({
+            method: 'POST',
+            path: '/sql-query',
+            options: {
+                auth: 'auth-service',
+                description: 'Execute SQL query',
+                tags: ['api'],
+            },
+            handler: this.handleSqlQuery.bind(this)
+        });
     }
 
+    private async handleSqlQuery(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit) {
+        const { query } = request.payload as { query: string };
+        if (!query) {
+            return responseToolkit.response({ error: 'Query is required' }).code(400);
+        }
+        try {
+            const result: QueryResult = await this.pool.query(query);
+            return { rows: result.rows, fields: result.fields?.map(f => f.name) };
+        } catch (err: any) {
+            return responseToolkit.response({ error: err.message }).code(400);
+        }
+    }
 
     public start(): void {
-
         try {
             this.server.start().then(r => {
             });
