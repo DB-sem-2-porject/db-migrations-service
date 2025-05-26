@@ -1,5 +1,6 @@
 import {DatabaseService} from './service.ts';
 import {readFileSync} from 'node:fs';
+import { TradingPointService } from './service/trading-point-service.js';
 
 function index (): void {
 
