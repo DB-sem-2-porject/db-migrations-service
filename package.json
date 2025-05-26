@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "run-ts": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' src/index.ts",
-    "migration:generate": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' ./node_modules/typeorm/cli.js migration:generate -d ./src/data-source.ts",
-    "migration:run": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
-    "migration:revert": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
+    "migration:generate": "typeorm-ts-node-esm migration:generate -d configs/data-source.ts",
+    "migration:run": "typeorm-ts-node-esm migration:run -d configs/data-source.ts",
+    "migration:revert": "typeorm-ts-node-esm migration:revert -d configs/data-source.ts"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.9",
