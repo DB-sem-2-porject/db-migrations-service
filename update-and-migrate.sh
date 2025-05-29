@@ -12,7 +12,7 @@ echo "Generating migration..."
 timestamp=$(date +%Y%m%d%H%M%S)
 npm run migration:generate -- "./migrations/Migration${timestamp}"
 
-echo "▶Running migrations..."
+echo "Running migrations..."
 npm run migration:run
 
 echo "Update and migration completed successfully"
