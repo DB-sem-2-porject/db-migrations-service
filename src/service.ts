@@ -1,13 +1,11 @@
-import jwt from 'jsonwebtoken'
 import * as Hapi from "@hapi/hapi";
 import pg from 'pg';
-import { QueryResult } from "pg";
-const { Pool } = pg;
 import Boom from '@hapi/boom';
 
 import {DataSource} from "typeorm";
-import { AuthServiceInfo } from './auth-service-info.js';
-import { AppDataSource } from '../configs/data-source.js';
+import {AppDataSource} from '../configs/data-source.js';
+
+const { Pool } = pg;
 
 export interface DatabaseServiceOptions {
     port: number;
@@ -64,7 +62,9 @@ export class DatabaseService {
         
         
         // Стратегия аутентификации
+        /*
         this.server.auth.strategy('custom', 'custom', {
+
             authenticate: async (request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit) => {
                 const authHeader = request.headers.authorization;
                 
@@ -87,18 +87,8 @@ export class DatabaseService {
                 }
             }
         });
-        
-        
-        this.server.route({
-            method: 'POST',
-            path: '/sql-query',
-            options: {
-                auth: 'custom',
-                description: 'Execute SQL query',
-                tags: ['api'],
-            },
-            handler: this.handleSqlQuery.bind(this)
-        });
+         */
+
         this.dataSource = AppDataSource;
         
         this.server.route({
@@ -117,31 +107,46 @@ export class DatabaseService {
     private validateInternalToken(request: Hapi.Request): Hapi.Lifecycle.ReturnValue {
         const token = request.headers['service-token'];
         
-        if (!token || token !== this.INTERNAL_SERVICE_TOKEN) {
+        if (!(token && token == this.INTERNAL_SERVICE_TOKEN)) {
             throw Boom.unauthorized('Invalid service token');
         }
         
         return null;
     }
-    
-    private async handleDataSourceRequest(): Promise<DataSource> {
+
+    private async handleDataSourceRequest(): Promise<any> {
         if (!this.dataSource.isInitialized) {
             await this.dataSource.initialize();
         }
-        return this.dataSource;
-    }
 
-    private async handleSqlQuery(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit) {
-        const { query } = request.payload as { query: string };
-        if (!query) {
-            return responseToolkit.response({ error: 'Query is required' }).code(400);
-        }
-        try {
-            const result: QueryResult = await this.pool.query(query);
-            return { rows: result.rows, fields: result.fields?.map(f => f.name) };
-        } catch (err: any) {
-            return responseToolkit.response({ error: err.message }).code(400);
-        }
+        // Вытаскиваем только нужный config
+        // const config = {
+        //     type: this.dataSource.options.type,
+        //     host: this.dataSource.options.host,
+        //     port: this.dataSource.options.port,
+        //     username: this.dataSource.options.username,
+        //     password: this.dataSource.options.password,
+        //     database: this.dataSource.options.database,
+        //     synchronize: this.dataSource.options.synchronize,
+        //     logging: this.dataSource.options.logging,
+        //     entities: this.dataSource.options.entities,
+        //     migrations: this.dataSource.options.migrations,
+        //     subscribers: this.dataSource.options.subscribers,
+        // };
+
+        return {
+            type: this.dataSource.options.type,
+            host: 'host' in this.dataSource.options ? this.dataSource.options.host : undefined,
+            port: 'port' in this.dataSource.options ? this.dataSource.options.port : undefined,
+            username: 'username' in this.dataSource.options ? this.dataSource.options.username : undefined,
+            password: 'password' in this.dataSource.options ? this.dataSource.options.password : undefined,
+            database: this.dataSource.options.database,
+            synchronize: this.dataSource.options.synchronize,
+            logging: this.dataSource.options.logging,
+            entities: this.dataSource.options.entities,
+            migrations: this.dataSource.options.migrations,
+            subscribers: this.dataSource.options.subscribers,
+        };
     }
 
     public start(): void {

@@ -9,9 +9,9 @@ const require = createRequire(import.meta.url)
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT || "5432"),
-    username: process.env.DB_USERNAME || "postgres",
+    host: process.env.DB_HOST ? process.env.DB_HOST : "localhost",
+    port: parseInt(process.env.DB_PORT ? process.env.DB_PORT : "5432"),
+    username: process.env.DB_USERNAME ? process.env.DB_USERNAME : "postgres",
     password: process.env.DB_PASSWORD || "3255",
     database: process.env.DB_DATABASE || "DB-project",
     

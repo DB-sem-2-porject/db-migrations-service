@@ -25,4 +25,4 @@ function index (): void {
 }
 
 
-// index()
+index()
