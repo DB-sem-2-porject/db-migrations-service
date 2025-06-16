@@ -11,25 +11,13 @@ export interface DatabaseServiceOptions {
     port: number;
     host?: string;
 }
-interface AuthPayload {
-    email: string;
-    password: string;
-}
 
-export interface LoginServiceOptions {
-    port: number;
-    host?: string;
-}
 export interface DatabaseOptions {
     user: string;
     host?: string;
     database: string;
     password: string;
     port: number;
-}
-interface LoginPayload {
-    email: string;
-    password: string;
 }
 
 export class DatabaseService {
@@ -59,35 +47,6 @@ export class DatabaseService {
             user: databaseOptions.user,
             password: databaseOptions.password,
         });
-        
-        
-        // Стратегия аутентификации
-        /*
-        this.server.auth.strategy('custom', 'custom', {
-
-            authenticate: async (request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit) => {
-                const authHeader = request.headers.authorization;
-                
-                try {
-                    const response = await fetch(`${AuthServiceInfo.AUTH_SERVICE_URL}/auth`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': authHeader
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        Boom.unauthorized('Invalid token');
-                    }
-                    
-                    const data = await response.json();
-                    return responseToolkit.authenticated({ credentials: data.user });
-                } catch (error) {
-                    throw Boom.unauthorized('Authentication failed');
-                }
-            }
-        });
-         */
 
         this.dataSource = AppDataSource;
         
@@ -118,22 +77,7 @@ export class DatabaseService {
         if (!this.dataSource.isInitialized) {
             await this.dataSource.initialize();
         }
-
-        // Вытаскиваем только нужный config
-        // const config = {
-        //     type: this.dataSource.options.type,
-        //     host: this.dataSource.options.host,
-        //     port: this.dataSource.options.port,
-        //     username: this.dataSource.options.username,
-        //     password: this.dataSource.options.password,
-        //     database: this.dataSource.options.database,
-        //     synchronize: this.dataSource.options.synchronize,
-        //     logging: this.dataSource.options.logging,
-        //     entities: this.dataSource.options.entities,
-        //     migrations: this.dataSource.options.migrations,
-        //     subscribers: this.dataSource.options.subscribers,
-        // };
-
+        console.log('Got DataSource request');
         return {
             type: this.dataSource.options.type,
             host: 'host' in this.dataSource.options ? this.dataSource.options.host : undefined,
@@ -143,9 +87,9 @@ export class DatabaseService {
             database: this.dataSource.options.database,
             synchronize: this.dataSource.options.synchronize,
             logging: this.dataSource.options.logging,
-            entities: this.dataSource.options.entities,
-            migrations: this.dataSource.options.migrations,
-            subscribers: this.dataSource.options.subscribers,
+            // НЕ передаем entities через HTTP - они не сериализуются
+            // entities: this.dataSource.options.entities,
+            // subscribers: this.dataSource.options.subscribers,
         };
     }
 
